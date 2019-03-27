@@ -69,6 +69,7 @@ class Floor {
         this.state[floor - 1].subCorridor.forEach((value, index) => {
             if (index === subCorridor - 1) {
                 this.state[floor - 1].subCorridor[index].light = 'OFF';
+                this.state[floor - 1].subCorridor[index].AC = 'ON';
                 this.checkandRevertPowerUsage(this.state[floor - 1].subCorridor);
                 return;
             }
@@ -98,14 +99,13 @@ class Floor {
     revertPowerUsage(currentState, maxPowerUsage) {
         this.currentFloor.subCorridor.forEach((value, index) => {
             let currentUsage = this.getCurrentUsage(currentState);
-            if (currentUsage + config.unit.AC < maxPowerUsage)
+            if (currentUsage + config.unit.AC <= maxPowerUsage) {
                 if (this.currentFloor.subCorridor[this.currentFloorNumber].AC === 'OFF') {
                     this.currentFloor.subCorridor[this.currentFloorNumber].AC = 'ON';
-                } else {
-                    if (value.AC === 'OFF') {
-                        value.AC = 'ON';
-                    }
+                } else if (value.AC === 'OFF') {
+                    value.AC = 'ON';
                 }
+            }
         })
     }
 
@@ -142,7 +142,6 @@ class Floor {
             }
         })
 
-        console.log('Current Usage', currentUsage);
         return currentUsage;
 
     }

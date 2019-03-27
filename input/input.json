@@ -1,5 +1,16 @@
 {
     "floor": 1,
     "mainCorridor": 1,
-    "subCorridor": 2
+    "subCorridor": 2,
+    "sensorInput": [{
+        "floor": 1,
+        "subCorridor": 1,
+        "movement": true
+    },{
+        "floor": 1,
+        "subCorridor": 1,
+        "movement": false
+    }]
+
+
 }

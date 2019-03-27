@@ -1,14 +1,16 @@
 const app = require('express')();
 const floor = require('./controller/floor');
-const config = require('./config/config.json');
 const input = require('./input/input.json');
 var floorInstance;
 
 function motionDetected() {
-    floorInstance.movementDetection(pfloor = 1, subCorridor = 1);
-    floorInstance.movementDetection(pfloor = 1, subCorridor = 2);
-    floorInstance.movementNotDetection(pfloor = 1, subCorridor = 1);
-    floorInstance.movementNotDetection(pfloor = 1, subCorridor = 2);
+    input.sensorInput.forEach((input) => {
+        if(input.movement){
+            floorInstance.movementDetection(input.floor, input.subCorridor);
+        } else {
+            floorInstance.movementNotDetection(input.floor, input.subCorridor);
+        }
+    })
 }
 
 function init() {
