@@ -1,0 +1,7 @@
+{
+    "input":{
+        "floor": 1,
+        "mainCorridor":2,
+        "subCorridor":2
+    }
+}
