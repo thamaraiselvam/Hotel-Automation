@@ -63,46 +63,21 @@ class Floor {
     turnOnLights() {
         this.state[this.currentFloorNumber].subCorridor[this.currentSubCorridorNumber].light = 'ON';
         this.state[this.currentFloorNumber].subCorridor[this.currentSubCorridorNumber].AC = 'ON';
-        this.checkAndReducePowerUsage(this.state[this.currentFloorNumber].subCorridor);
+        this.turnOffUnwantedPowerUsage(this.state[this.currentFloorNumber].subCorridor);
     }
 
     turnOffLights() {
         this.state[this.currentFloorNumber].subCorridor[this.currentSubCorridorNumber].light = 'OFF';
         this.state[this.currentFloorNumber].subCorridor[this.currentSubCorridorNumber].AC = 'ON';
-        this.checkandRevertPowerUsage(this.state[this.currentFloorNumber].subCorridor);
+        this.turnOnWantedPowerUsage(this.state[this.currentFloorNumber].subCorridor);
     }
 
-    getMaxAllowedUnit() {
+    getMaxAllowedUnitPerFloor() {
         return config.floor.subCorridor.maxAllowedPowerConsumption * this.input.subCorridor;
     }
 
-    checkAndReducePowerUsage(currentState) {
-        let maxPowerUsage = this.getMaxAllowedUnit();
-        this.reducePowerUsage(currentState, maxPowerUsage);
-
-    }
-
-    checkandRevertPowerUsage(currentState) {
-        let maxPowerUsage = this.getMaxAllowedUnit();
-        this.revertPowerUsage(currentState, maxPowerUsage);
-
-    }
-
-    revertPowerUsage(currentState, maxPowerUsage) {
-        this.currentFloor.subCorridor.forEach((value, index) => {
-            let currentUsage = this.getCurrentUsage(currentState);
-            if (currentUsage + config.unit.AC <= maxPowerUsage) {
-                if (this.currentFloor.subCorridor[this.currentFloorNumber].AC === 'OFF') {
-                    this.currentFloor.subCorridor[this.currentFloorNumber].AC = 'ON';
-                } else if (value.AC === 'OFF') {
-                    value.AC = 'ON';
-                }
-            }
-        })
-    }
-
-
-    reducePowerUsage(currentState, maxPowerUsage) {
+    turnOffUnwantedPowerUsage(currentState) {
+        let maxPowerUsage = this.getMaxAllowedUnitPerFloor();
         this.currentFloor.subCorridor.forEach((value, index) => {
             let currentUsage = this.getCurrentUsage(currentState);
             if (currentUsage > maxPowerUsage) {
@@ -121,6 +96,21 @@ class Floor {
                 this.currentFloor.subCorridor[this.currentFloorNumber].AC = 'OFF';
             }
         }
+
+    }
+
+    turnOnWantedPowerUsage(currentState) {
+        let maxPowerUsage = this.getMaxAllowedUnitPerFloor();
+        this.currentFloor.subCorridor.forEach((value, index) => {
+            let currentUsage = this.getCurrentUsage(currentState);
+            if (currentUsage + config.unit.AC <= maxPowerUsage) {
+                if (this.currentFloor.subCorridor[this.currentFloorNumber].AC === 'OFF') {
+                    this.currentFloor.subCorridor[this.currentFloorNumber].AC = 'ON';
+                } else if (value.AC === 'OFF') {
+                    value.AC = 'ON';
+                }
+            }
+        })
     }
 
     getCurrentUsage(currentState) {
@@ -138,12 +128,7 @@ class Floor {
 
     }
 
-    turnOffRandomAc() {
-
-    }
-
     printState(statusMessage) {
-        // this.checkMaxAllowedUnit();
         console.log(statusMessage);
         this.state.forEach((floor, index) => {
             console.log(`Floor ${index + 1}`);

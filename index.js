@@ -1,22 +1,22 @@
-const app = require('express')();
-const floor = require('./controller/floor');
+const floor = require('./controller/floor.controller');
 const input = require('./input/input.json');
-var floorInstance;
 
-function motionDetected() {
-    input.sensorInput.forEach((input) => {
-        floorInstance.movementDetection(input.movement, input.floor, input.subCorridor);
-    })
+class BaseControlller {
+    constructor() {
+        this.init();
+        this.feedInputs();
+    }
+
+    init() {
+        this.floorInstance = new floor(input);
+    }
+
+    feedInputs() {
+        input.sensorInput.forEach((input) => {
+            this.floorInstance.movementDetection(input.movement, input.floor, input.subCorridor);
+        })
+    }
+
 }
 
-function init() {
-    floorInstance = new floor(input);
-}
-
-app.get('/', (req, res) => {
-    init();
-    motionDetected();
-    res.status(200).json(floorInstance.getState());
-})
-
-app.listen(3001);
+new BaseControlller();
