@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cli-highlight": "^2.1.0"
+    "cli-highlight": "^2.1.0",
+    "express": "^4.16.4",
+    "lodash": "^4.17.11"
   }
 }

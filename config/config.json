@@ -1,7 +1,20 @@
 {
-    "input":{
-        "floor": 1,
-        "mainCorridor":2,
-        "subCorridor":2
-    }
+    "floor": {
+        "mainCorridor": {
+            "maxAllowedPowerConsumption": 15,
+            "light": 1,
+            "AC": 1
+        },
+        "subCorridor": {
+            "maxAllowedPowerConsumption": 10,
+            "light": 1,
+            "AC": 1
+        }
+    },
+    "unit": {
+        "AC": 10,
+        "light": 5
+    },
+    "startTime": "6PM",
+    "endTime": "6AM"
 }
