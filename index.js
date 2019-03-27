@@ -5,11 +5,7 @@ var floorInstance;
 
 function motionDetected() {
     input.sensorInput.forEach((input) => {
-        if(input.movement){
-            floorInstance.movementDetection(input.floor, input.subCorridor);
-        } else {
-            floorInstance.movementNotDetection(input.floor, input.subCorridor);
-        }
+        floorInstance.movementDetection(input.movement, input.floor, input.subCorridor);
     })
 }
 

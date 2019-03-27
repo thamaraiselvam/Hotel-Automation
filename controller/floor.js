@@ -1,5 +1,4 @@
 const config = require('./../config/config.json');
-const _ = require('lodash');
 class Floor {
     constructor(input) {
         this.initData(input);
@@ -38,46 +37,39 @@ class Floor {
         return this.state;
     }
 
-    movementDetection(floor, subCorridor) {
-        if (!floor || !subCorridor) {
-            return; //floor or Sub Corridor cannot be empty
-        }
-
-        this.currentFloorNumber = subCorridor - 1;
-        this.currentSubCorridorNumber = floor - 1;
-        this.currentFloor = this.state[floor - 1];
-        this.currentSubCorridor = this.state[floor - 1].subCorridor[subCorridor - 1];
-
-        this.state[floor - 1].subCorridor.forEach((value, index) => {
-            if (index === subCorridor - 1) {
-                this.state[floor - 1].subCorridor[index].light = 'ON';
-                this.state[floor - 1].subCorridor[index].AC = 'ON';
-                this.checkAndReducePowerUsage(this.state[floor - 1].subCorridor);
-                return;
-            }
-        });
-
-        this.printState(`Movement in Floor ${floor}, Sub Corridor ${subCorridor} `);
-        this.getCurrentUsage(this.state[floor - 1].subCorridor);
+    setCurrentState(currentFloor, currentSubCorridor) {
+        this.currentFloorNumber = currentSubCorridor - 1;
+        this.currentSubCorridorNumber = currentFloor - 1;
+        this.currentFloor = this.state[currentFloor - 1];
+        this.currentSubCorridor = this.state[currentFloor - 1].subCorridor[currentSubCorridor - 1];
     }
 
-    movementNotDetection(floor, subCorridor) {
-        if (!floor || !subCorridor) {
+    movementDetection(movement, currentFloor, currentSubCorridor) {
+        if (!currentFloor || !currentSubCorridor) {
             return; //floor or Sub Corridor cannot be empty
         }
 
-        this.state[floor - 1].subCorridor.forEach((value, index) => {
-            if (index === subCorridor - 1) {
-                this.state[floor - 1].subCorridor[index].light = 'OFF';
-                this.state[floor - 1].subCorridor[index].AC = 'ON';
-                this.checkandRevertPowerUsage(this.state[floor - 1].subCorridor);
-                return;
-            }
+        this.setCurrentState(currentFloor, currentSubCorridor);
 
-        });
+        if (movement) {
+            this.turnOnLights();
+            this.printState(`Movement in Floor ${currentFloor}, Sub Corridor ${currentSubCorridor} `);
+        } else {
+            this.turnOffLights();
+            this.printState(`No Movement in Floor ${currentFloor}, Sub Corridor ${currentSubCorridor} for a minute`);
+        }
+    }
 
-        this.printState(`No Movement in Floor ${floor}, Sub Corridor ${subCorridor} for a minute`);
-        this.getCurrentUsage(this.state[floor - 1].subCorridor);
+    turnOnLights() {
+        this.state[this.currentFloorNumber].subCorridor[this.currentSubCorridorNumber].light = 'ON';
+        this.state[this.currentFloorNumber].subCorridor[this.currentSubCorridorNumber].AC = 'ON';
+        this.checkAndReducePowerUsage(this.state[this.currentFloorNumber].subCorridor);
+    }
+
+    turnOffLights() {
+        this.state[this.currentFloorNumber].subCorridor[this.currentSubCorridorNumber].light = 'OFF';
+        this.state[this.currentFloorNumber].subCorridor[this.currentSubCorridorNumber].AC = 'ON';
+        this.checkandRevertPowerUsage(this.state[this.currentFloorNumber].subCorridor);
     }
 
     getMaxAllowedUnit() {
